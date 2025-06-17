@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mark Analyzer - Medical & Engineering Cutoff</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #cfe9ff, #fbeaff);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background-color: #ffffff;
+      width: 90%;
+      max-width: 500px;
+      padding: 30px 25px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e0e0e0;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2a3eb1;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      margin-bottom: 5px;
+      color: #333;
+      font-weight: 600;
+    }
+
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #bbb;
+      transition: border 0.2s ease-in-out;
+    }
+
+    input[type="number"]:focus,
+    select:focus {
+      border-color: #3f51b5;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      background-color: #3f51b5;
+      color: white;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2c3ca0;
+    }
+
+    .result {
+      background-color: #f0fff4;
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 10px;
+      color: #1b5e20;
+      font-weight: 600;
+      box-shadow: inset 0 0 5px rgba(0, 128, 0, 0.1);
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Mark Analyzer</h2>
+  <label>Language:</label>
+  <input type="number" id="lang" max="100" min="0">
+
+  <label>English:</label>
+  <input type="number" id="eng" max="100" min="0">
+
+  <label>Maths:</label>
+  <input type="number" id="maths" max="100" min="0">
+
+  <label>Science Option:</label>
+  <select id="scienceOption">
+    <option value="bio">Biology</option>
+    <option value="cs">Computer Science</option>
+  </select>
+
+  <label>Biology / CS:</label>
+  <input type="number" id="bioOrCS" max="100" min="0">
+
+  <label>Physics:</label>
+  <input type="number" id="phy" max="100" min="0">
+
+  <label>Chemistry:</label>
+  <input type="number" id="chem" max="100" min="0">
+
+  <button onclick="calculate()">Calculate</button>
+
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+  function calculate() {
+    let lang = parseFloat(document.getElementById('lang').value) || 0;
+    let eng = parseFloat(document.getElementById('eng').value) || 0;
+    let maths = parseFloat(document.getElementById('maths').value) || 0;
+    let scienceOption = document.getElementById('scienceOption').value;
+    let bioOrCS = parseFloat(document.getElementById('bioOrCS').value) || 0;
+    let phy = parseFloat(document.getElementById('phy').value) || 0;
+    let chem = parseFloat(document.getElementById('chem').value) || 0;
+
+    let totalMarks = lang + eng + maths + bioOrCS + phy + chem;
+    let percentage = (totalMarks / 600 * 100).toFixed(2);
+
+    let resultText = `Total Marks: ${totalMarks}/600<br>Percentage: ${percentage}%<br><br>`;
+
+    if (scienceOption === "bio") {
+      // Medical cutoff calculation (out of 200)
+      let medCutoffRaw = (bioOrCS + phy + chem) / 3;
+      let medCutoff = ((medCutoffRaw / 100) * 200).toFixed(2);
+      resultText += `Medical Cutoff (PCB): ${medCutoffRaw.toFixed(2)} (Raw Score)<br>`;
+      resultText += `Medical Cutoff (out of 200): <strong>${medCutoff}</strong><br><br>`;
+    }
+
+    // Engineering cutoff calculation (out of 200)
+    let tneaRaw = (maths / 2) + (phy / 4) + (chem / 4);
+    let tneaOutOf200 = ((tneaRaw / 100) * 200).toFixed(2);
+    resultText += `Engineering Cutoff (TNEA - PCM): ${tneaRaw.toFixed(2)} (Raw Score)<br>`;
+    resultText += `Engineering Cutoff (out of 200): <strong>${tneaOutOf200}</strong>`;
+
+    document.getElementById('result').innerHTML = resultText;
+  }
+</script>
+
+
+</body>
+</html>
